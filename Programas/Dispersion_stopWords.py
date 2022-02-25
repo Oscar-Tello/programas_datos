@@ -6,11 +6,24 @@ import spacy
 #Libreria que implementa las stopwords
 from nltk.corpus import stopwords
 
+def limpieza(csv):
+    for row in csv:
+        for elemento in row.split():
+            
+
+
+
+
 stop_words = set(stopwords.words('spanish')) #Variable con el diccionario en español
-nlp = spacy.load('en_core_web_sm')
+diccionarioSimb = {'!','$','=','&','(',')','*',',','-','.','“','”','?','¿','¡','|','°','¬',':','{','}','[',']',
+                   '¨','<','>','~','^','♀','♂','!'}
+
+stop_words.update(diccionarioSimb)
+nlp = spacy.load('es_core_news_sm')
+print(stop_words)
 
 #Variable en la que se guardaran los datos del archivo csv de la ruta especificada
-df = pd.read_csv('C:\\Users\\LARSI-EQUIPO2\\Desktop\\programas\\Datos\\Tweets-csv.csv')
+df = pd.read_csv('C:\\Users\\LARSI-EQUIPO2\\Desktop\\programas\\Datos\\Tweets.csv')
 
 #A ala columna especificada mediante un lamda se limpiaran las stopword del diccionario
 df.tweet = df.tweet.apply(lambda x: ' '.join([word for word in x.split() if word.lower() not in stop_words]))
