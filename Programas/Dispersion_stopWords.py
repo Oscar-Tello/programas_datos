@@ -7,26 +7,30 @@ import spacy
 from nltk.corpus import stopwords
 
 def limpieza(csv):
-    for row in csv:
-        for elemento in row.split():
-            
-
-
-
+    for simbolo in diccionarioSimb:
+        csv = csv.replace(simbolo, '')
+    csv = ' '.join(word for word in csv.split() if word not in stop_words)
+    #for word in stop_words:
+     #   word = ' ' + word + ' '
+      #  csv = csv.replace(word, ' ')
+    return csv
 
 stop_words = set(stopwords.words('spanish')) #Variable con el diccionario en español
-diccionarioSimb = {'!','$','=','&','(',')','*',',','-','.','“','”','?','¿','¡','|','°','¬',':','{','}','[',']',
+diccionarioSimb = {'!','$','=','&','(',')','*','-','.','“','”','?','¿','¡','|','°','¬',':','{','}','[',']',
                    '¨','<','>','~','^','♀','♂','!'}
-
-stop_words.update(diccionarioSimb)
-nlp = spacy.load('es_core_news_sm')
 print(stop_words)
 
+#stop_words.update(diccionarioSimb)
+nlp = spacy.load('es_core_news_sm')
+#print(stop_words)
+
 #Variable en la que se guardaran los datos del archivo csv de la ruta especificada
-df = pd.read_csv('C:\\Users\\LARSI-EQUIPO2\\Desktop\\programas\\Datos\\Tweets.csv')
+df = pd.read_csv('C:\\Users\\Oscar Tello\\Desktop\\programas_datos\\Datos\\claudia-sheinbaum.csv')
+
+#limpieza(df['tweet'])
 
 #A ala columna especificada mediante un lamda se limpiaran las stopword del diccionario
-df.tweet = df.tweet.apply(lambda x: ' '.join([word for word in x.split() if word.lower() not in stop_words]))
+df.tweet = df.tweet.apply(lambda x: limpieza(x.lower()))
 
 #Se le aplica una separacion por comas a las palabras de la columna especificada
 df = df.assign(
