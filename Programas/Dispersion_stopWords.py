@@ -62,7 +62,7 @@ dispersion_df = dispersion.get_df()
 #Se asigna a los lados X y Y la etiqueta correspondientes y los valores
 dispersion_df = dispersion_df.assign(
     X=lambda df: df.Frequency,
-    Y=lambda df: df["Rosengren's S"],
+    Y=lambda df: df["KL-divergence"],
 )
 dispersion_df = dispersion_df.assign(
     Xpos=lambda df: st.Scalers.log_scale(df.X),
@@ -76,9 +76,9 @@ html = st.dataframe_scattertext(
     metadata=corpus.get_df()['tweet'],
     ignore_categories=True,
     x_label='Log Frequency',
-    y_label="Rosengren's S",
+    y_label="KL-divergence",
     y_axis_labels=['Less Dispersion', 'Medium', 'More Dispersion'], #Etiquetas de los nombres que se mostraran en la grafica
 )
 
 #Accion que guardar en un archivo html con el nombre especificado
-open("limpieza_datos.html", 'wb').write(html.encode('utf-8'))
+open("limpieza_datos_KL-divergence.html", 'wb').write(html.encode('utf-8'))

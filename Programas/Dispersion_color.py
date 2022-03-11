@@ -34,7 +34,6 @@ def normalize(s):
 stop_words = set(stopwords.words('spanish')) #Variable con el diccionario en español
 diccionarioSimb = {'!','$','=','&','(',')','*','-','.','“','”','?','¿','¡','|','°','¬',':','{','}','[',']',
                    '¨','<','>','~','^','♀','♂','!','#','@','_'}
-print(stop_words)
 
 #stop_words.update(diccionarioSimb)
 nlp = spacy.load('es_core_news_sm')

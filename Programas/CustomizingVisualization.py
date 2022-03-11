@@ -15,7 +15,7 @@ dispersion_df = dispersion.get_df()
 dispersion_df = dispersion_df.assign(
     X=lambda df: df.Frequency,
 
-    Y=lambda df: df["Rosengren's S"],
+    Y=lambda df: df["Frequency"],
 )
 dispersion_df = dispersion_df.assign(
     Xpos=lambda df: st.Scalers.log_scale(df.X),
@@ -27,9 +27,9 @@ html = st.dataframe_scattertext(
     metadata=corpus.get_df()['speaker'] + ' (' + corpus.get_df()['party'].str.upper() + ')',
     ignore_categories=True,
     x_label='Log Frequency',
-    y_label="Rosengren's S",
+    y_label="Frequency",
     y_axis_labels=['Less Dispersion', 'Medium', 'More Dispersion'],
 )
 
-open("Customizing-Visualization.html", 'wb').write(html.encode('utf-8'))
+open("Customizing-Visualization_Frequency.html", 'wb').write(html.encode('utf-8'))
 
