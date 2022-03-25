@@ -38,16 +38,16 @@ nlp = spacy.load('es_core_news_sm')
 #print(stop_words)
 
 #Variable en la que se guardaran los datos del archivo csv de la ruta especificada
-df = pd.read_csv('C:\\Users\\LARSI-EQUIPO2\\Desktop\\programas\\Datos\\claudia-sheinbaum.csv')
+df = pd.read_csv('C:\\Users\\LARSI-EQUIPO2\\Desktop\\programas\\Datos\\stop.csv')
 
 #limpieza(df['tweet'])
 
 #A ala columna especificada mediante un lamda se limpiaran las stopword del diccionario
-df.tweet = df.tweet.apply(lambda x: limpieza(x.lower()))
+df.text = df.text.apply(lambda x: limpieza(x.lower()))
 
 #Se le aplica una separacion por comas a las palabras de la columna especificada
 df = df.assign(
-    parse=lambda df: df.tweet.apply(nlp))
+    parse=lambda df: df.text.apply(nlp))
 
 #Se quitan palabras menos infrequentes a la o las columnas especificadas
 corpus = st.CorpusWithoutCategoriesFromParsedDocuments(
@@ -62,7 +62,7 @@ dispersion_df = dispersion.get_df()
 #Se asigna a los lados X y Y la etiqueta correspondientes y los valores
 dispersion_df = dispersion_df.assign(
     X=lambda df: df.Frequency,
-    Y=lambda df: df["KL-divergence"],
+    Y=lambda df: df["Rosengren's S"],
 )
 dispersion_df = dispersion_df.assign(
     Xpos=lambda df: st.Scalers.log_scale(df.X),
@@ -73,12 +73,12 @@ dispersion_df = dispersion_df.assign(
 html = st.dataframe_scattertext(
     corpus,
     plot_df=dispersion_df,
-    metadata=corpus.get_df()['tweet'],
+    metadata=corpus.get_df()['text'],
     ignore_categories=True,
     x_label='Log Frequency',
-    y_label="KL-divergence",
+    y_label="Rosengren's S",
     y_axis_labels=['Less Dispersion', 'Medium', 'More Dispersion'], #Etiquetas de los nombres que se mostraran en la grafica
 )
 
 #Accion que guardar en un archivo html con el nombre especificado
-open("limpieza_datos_KL-divergence.html", 'wb').write(html.encode('utf-8'))
+open("limpiezaDatos_UcraniaRussia.html", 'wb').write(html.encode('utf-8'))
