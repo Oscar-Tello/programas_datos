@@ -1,0 +1,23 @@
+---Intrucciones para configurar un nuevo entorno---
+*Requisitos
+
+
+A) instalar C++ tools (en caso de tener problemas con la instalacion de las librerias)
+	-Enlace de descarga: https://visualstudio.microsoft.com/es/visual-cpp-build-tools/
+	-Una vez instalado seleccionar "desarrollo para el escritorio con C++"
+	-y en las opciones que apareceran en la derecha seleccionar herramienta de compilacion MSVC v142 - VS 2019 C++...
+	-tambien marcar la casilla windows 10 SDK(y la version mas reciente) eso en caso de tener windows 10.
+
+	***NOTA***
+	Se necesita crear un nuevo entorno despues de esto, debido a que las librerias a instalar no podran instalarse.
+	
+
+B) instalar la version de python deseada (recomendable la 3.5 en adelante de 64bits)
+C) instalar la libreria Scattertext, Spacy, nltk.
+	Se necesitara descargar desde la terminal de python lo siguiente:
+		*python -m spacy download es_core_news_sm  (esto para descargar el idioma español de Spacy)
+		*python -m spacy download en_core_web_sm  (opcional si se desea tambien la version en ingles de Spacy)
+
+D) Al momento de ejcutar el programa se necesitara descargar el stopword de la libreria nltk, solo hay que seguir las
+instrucciones que apareceran en consola.
+
