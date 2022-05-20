@@ -1,7 +1,5 @@
 import scattertext as st
 movie_df = st.SampleCorpora.RottenTomatoes.get_data()
-movie_df.to_csv("datos_tomatoes.csv")
-
 movie_df.category = movie_df.category.apply\
 	(lambda x: {'rotten': 'Negative', 'fresh': 'Positive', 'plot': 'Plot'}[x])
 corpus = st.CorpusFromPandas(
@@ -27,5 +25,4 @@ html = st.produce_semiotic_square_explorer(semiotic_square,
                                            y_label='Plot-Review',
                                            neutral_category_name='Plot Description',
                                            metadata=movie_df['movie_name'])
-
 open("prueba_polaridad.html", 'wb').write(html.encode('utf-8'))
