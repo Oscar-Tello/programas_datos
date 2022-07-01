@@ -2,6 +2,9 @@
 import scattertext as st
 import pandas as pd
 import spacy
+import numpy as np
+from collections import Counter
+import heapq
 
 # Libreria que implementa las stopwords
 from nltk.corpus import stopwords
@@ -33,8 +36,8 @@ def normalize(s):
 
 stop_words = set(stopwords.words('english'))  # Variable con el diccionario en español
 diccionarioSimb = {'!', '$', '=', '&', '(', ')', '*', '-', '.', '“', '”', '?', '¿', '¡', '|', '°', '¬', ':', '{', '}',
-                   '[', ']', '¨', '<', '>', '~', '^', '♀', '♂', '!', '#', '@', '/', '’',
-                   'ukrainerussia', 'ukrainewar', 'russian', 'ukraineunderattack','russiaukrainewar','ukraineinvasion' ,'ukraine', 'russia'}
+                   '[', ']', '¨', '<', '>', '~', '^', '♀', '♂', '!', '#', '@', '/', '’',}
+                  # 'ukrainerussia', 'ukrainewar', 'russian', 'ukraineunderattack','russiaukrainewar','ukraineinvasion' ,'ukraine', 'russia'}
 print(stop_words)
 
 # stop_words.update(diccionarioSimb)
@@ -42,7 +45,7 @@ nlp = spacy.load('en_core_web_sm')
 # print(stop_words)
 
 # Variable en la que se guardaran los datos del archivo csv de la ruta especificada
-df = pd.read_csv('C:\\Users\\LARSI-EQUIPO2\\Desktop\\programas\\Datos\\tweets\\UkraineRussia.csv')
+df = pd.read_csv('C:\\Users\\LARSI-EQUIPO2\\Desktop\\programas\\Datos\\tweets\\WWIII.csv')
 
 # limpieza(df['tweet'])
 
@@ -56,14 +59,39 @@ df = df.assign(
 # Se quitan palabras menos infrequentes a la o las columnas especificadas
 corpus = st.CorpusWithoutCategoriesFromParsedDocuments(
     df, parsed_col='parse'
-).build().get_unigram_corpus().remove_infrequent_words(minimum_term_count=100)
+).build().get_unigram_corpus().remove_infrequent_words(minimum_term_count=10)
 
 # Se asigna el corpus a la libreria de Scattertext
 corpus.get_categories()
 dispersion = st.Dispersion(corpus)
 dispersion_df = dispersion.get_df()
+print(dispersion_df['Frequency'])
+print(dispersion_df['Frequency'].values[0])
+print('-----------------------------------')
+print(dispersion_df['Frequency'].nlargest(50))
+print('-----------------------------------')
 
-print(dispersion_df.Frequency)
+#dispersion_df['Frequency'].nlargest(50).to_csv('Frecuentes.csv')
+print(dispersion_df['Frequency'].index[dispersion_df['Frequency'].nlargest(50)].tolist())
+
+#frecuencia = dispersion_df['Frequency']
+#frecuentes = dispersion_df['Frequency'].nlargest(50)
+frecuentes = {'nato','wwiii'}
+
+#print(dispersion_df['Frequency'])
+#dispersion_df['Frequency'].index[dispersion_df['Frequency']==73].tolist()
+print(dispersion_df['Frequency'].drop([dispersion_df['Frequency'].index[dispersion_df['Frequency']==73].tolist()],axis=0))
+print('-----------------------------------')
+
+      #(heapq.nlargest(50,dispersion_df['Frequency'])))
+
+#print(heapq.nlargest(50,dispersion_df['Frequency']))
+#print(dispersion_df)
+#print(ordenado)
+#f = Counter(dispersion_df['Frequency'])
+#print(f.most_common(10))
+#dispersion_df['Frequency'].to_csv('Frequency.csv')
+#print(dispersion_df['Frequency'])
 
 # Se asigna a los lados X y Y la etiqueta correspondientes y los valores
 dispersion_df = dispersion_df.assign(
@@ -88,4 +116,4 @@ html = st.dataframe_scattertext(
 )
 
 # Accion que guardar en un archivo html con el nombre especificado
-open("limpiezaDatos_UkraineRussia_V2.html", 'wb').write(html.encode('utf-8'))
+open("limpiezaDatos_WWIII.html", 'wb').write(html.encode('utf-8'))
