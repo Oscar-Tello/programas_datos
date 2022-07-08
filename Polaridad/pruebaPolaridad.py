@@ -25,5 +25,5 @@ analyzer = SentimentIntensityAnalyzer()
 for sentence in sentences:
     vs = analyzer.polarity_scores(sentence)
     var = vs.get("neu")
-    #print("{:-<65} {}".format(sentence, str(vs.get("neu"))))
-    print(var)
+    print("{:-<65} {}".format(sentence, str(vs)))
+    #print(var)
