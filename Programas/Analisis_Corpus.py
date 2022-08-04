@@ -28,8 +28,12 @@ def quitar_frecuentes(csv):
     csv =  ' '.join(word for word in csv.split() if word not in frecuentes)
     return csv
 
-def nube(csv):
+def nube_frecuentes(csv):
     csv = ' '.join(word for word in csv.split() if word in frecuentes)
+    return csv
+
+def nube_infrecuentes(csv):
+    csv = ' '.join(word for word in csv.split() if word not in frecuentes)
     return csv
 
 def normalize(s):
@@ -52,11 +56,14 @@ diccionarioSimb = {'!', '$', '=', '&', '(', ')', '*', '-', '.', '“', '”', '?
 
 # stop_words.update(diccionarioSimb)
 nlp = spacy.load('en_core_web_sm')
-# print(stop_words)
+print(stop_words)
 
 # Variable en la que se guardaran los datos del archivo csv de la ruta especificada
-df = pd.read_csv('C:\\Users\\LARSI-EQUIPO2\\Desktop\\programas\\Datos\\tweets\\STOPPUTTIN.csv')
+
+df = pd.read_csv('C:\\Users\\Tello\\Desktop\\programas\\programas_datos\\Datos\\tweets\\UkraineRussia.csv')
 #df = pd.read_csv('C:\\Users\\Oscar Tello\\Desktop\\programas_datos\\Datos\\tweets\\WWIII.csv')
+#df = pd.read_csv('C:\\Users\\LARSI-EQUIPO2\\Desktop\\programas\\Datos\\tweets\\STOPPUTTIN.csv')
+
 # limpieza(df['tweet'])
 
 # A ala columna especificada mediante un lamda se limpiaran las stopword del diccionario
@@ -90,20 +97,29 @@ dispersion_df = dispersion.get_df()
 #dispersion_df['Frequency'].index[dispersion_df['Frequency']==73].tolist()
 #print(dispersion_df.drop(dispersion_df['Frequency'].nlargest(50).index,axis=0))
 
-frecuentes = dispersion_df['Frequency'].nlargest(50).index
-print(frecuentes)
+frecuentes = dispersion_df['Frequency'].nlargest(30).index
+#print(frecuentes)
 
-df = pd.read_csv('C:\\Users\\LARSI-EQUIPO2\\Desktop\\programas\\Datos\\tweets\\STOPPUTTIN.csv')
+df = pd.read_csv('C:\\Users\\Tello\\Desktop\\programas\\programas_datos\\Datos\\tweets\\UkraineRussia.csv')
 df.tweet = df.tweet.apply(lambda x: limpieza(x.lower()))
-nube_palabras = df.tweet.apply(lambda x: nube(x.lower()))
+nube_palabras1 = df.tweet.apply(lambda x: nube_frecuentes(x.lower()))
+nube_palabras2 = df.tweet.apply(lambda x: nube_infrecuentes(x.lower()))
+
 df.tweet = df.tweet.apply(lambda x: quitar_frecuentes(x.lower()))
 
 
-text = ' '.join(palabra for palabra in nube_palabras)
+text = ' '.join(palabra for palabra in nube_palabras1)
 #print(text)
 word_cloud = WordCloud(collocations= False, background_color= "white").generate(text)
 
 plt.imshow(word_cloud, interpolation='bilinear')
+plt.axis("off")
+plt.show()
+
+text2 = ' '.join(palabra for palabra in nube_palabras2)
+word_cloud2 = WordCloud(collocations=False, background_color= "white").generate(text2)
+
+plt.imshow(word_cloud2, interpolation='bilinear')
 plt.axis("off")
 plt.show()
 
@@ -112,13 +128,17 @@ df = df.assign(
 
 corpus = st.CorpusWithoutCategoriesFromParsedDocuments(
     df, parsed_col='parse'
-).build().get_unigram_corpus().remove_infrequent_words(minimum_term_count=10)
+).build().get_unigram_corpus().remove_infrequent_words(minimum_term_count=100)
 
 corpus.get_categories()
 dispersion = st.Dispersion(corpus)
 dispersion_df = dispersion.get_df()
-#dispersion_df = dispersion_df.drop(dispersion_df['Frequency'].nlargest(50).index,axis=0)
 
+#dispersion_df = dispersion_df.drop(['nt'],axis=0)
+print(dispersion_df['Frequency'].nlargest(50))
+print(dispersion_df['Frequency'].nlargest(50).index)
+
+#corpus.get_df().to_csv('analisis_nt.csv')
 
 # Se asigna a los lados X y Y la etiqueta correspondientes y los valores
 dispersion_df = dispersion_df.assign(
@@ -130,12 +150,11 @@ dispersion_df = dispersion_df.assign(
     Ypos=lambda df: st.Scalers.scale(df.Y),
 )
 
-
 # Creacion de un archivo HTML que mostrara informacion mediante graficas
 html = st.dataframe_scattertext(
     corpus,
     plot_df=dispersion_df,
-    metadata=corpus.get_df()['tweet'],
+    metadata=corpus.get_df()['parse'],
     ignore_categories=True,
     x_label='Log Frequency',
     y_label="Rosengren's S",
@@ -144,4 +163,4 @@ html = st.dataframe_scattertext(
 )
 
 # Accion que guardar en un archivo html con el nombre especificado
-open("limpiezaDatos_STOPPUTTIN_V2.html", 'wb').write(html.encode('utf-8'))
+open("Dispersion_UkraineRussia.html", 'wb').write(html.encode('utf-8'))

@@ -2,7 +2,8 @@
 import scattertext as st
 import pandas as pd
 
-df = pd.read_csv('C:\\Users\\LARSI-EQUIPO2\\Desktop\\programas\\Datos\\sentimiento.csv')
+#df = pd.read_csv('C:\\Users\\LARSI-EQUIPO2\\Desktop\\programas\\Datos\\sentimiento.csv')
+df = pd.read_csv('C:\\Users\\Tello\\Desktop\\programas\\programas_datos\\Datos\\sentimiento.csv')
 #movie_df.to_csv("datos_tomatoes.csv")
 
 df.sentimiento = df.sentimiento.apply\
@@ -31,4 +32,4 @@ html = st.produce_semiotic_square_explorer(semiotic_square,
                                            neutral_category_name='Description',
                                            metadata=df['date'])
 
-open("prueba_polaridad.html", 'wb').write(html.encode('utf-8'))
+open("WWIII_polaridad.html", 'wb').write(html.encode('utf-8'))

@@ -19,7 +19,8 @@ def medir(texto):
     #print(mayor)
     return mayor
 
-df = pd.read_csv('C:\\Users\\LARSI-EQUIPO2\\Desktop\\programas\\Datos\\EN_24-02-2022_STOPWAR.csv')
+#df = pd.read_csv('C:\\Users\\LARSI-EQUIPO2\\Desktop\\programas\\Datos\\EN_24-02-2022_STOPWAR.csv')
+df = pd.read_csv('C:\\Users\\Tello\\Desktop\\programas\\programas_datos\\Datos\\tweets\\WWIII.csv')
 analyzer = SentimentIntensityAnalyzer()
 
 #df = df.tweet.apply(lambda x: medir(x))
@@ -28,5 +29,5 @@ df = df.assign(
     sentimiento = df.tweet.apply(lambda x: medir(x))
 )
 
-df.to_csv("sentimiento.csv")
+df.to_csv('C:\\Users\\Tello\\Desktop\\programas\\programas_datos\\Datos\\sentimiento.csv')
 print(df)
