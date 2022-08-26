@@ -56,12 +56,12 @@ diccionarioSimb = {'!', '$', '=', '&', '(', ')', '*', '-', '.', '“', '”', '?
 
 # stop_words.update(diccionarioSimb)
 nlp = spacy.load('en_core_web_sm')
-print(stop_words)
+#print(stop_words)
 
 # Variable en la que se guardaran los datos del archivo csv de la ruta especificada
 
-df = pd.read_csv('C:\\Users\\Tello\\Desktop\\programas\\programas_datos\\Datos\\tweets\\UkraineRussia.csv')
-#df = pd.read_csv('C:\\Users\\Oscar Tello\\Desktop\\programas_datos\\Datos\\tweets\\WWIII.csv')
+#df = pd.read_csv('C:\\Users\\Tello\\Desktop\\programas\\programas_datos\\Datos\\tweets\\UkraineRussia.csv')
+df = pd.read_csv('C:\\Users\\Oscar Tello\\Desktop\\programas_datos\\Datos\\tweets\\WWIII2.csv')
 #df = pd.read_csv('C:\\Users\\LARSI-EQUIPO2\\Desktop\\programas\\Datos\\tweets\\STOPPUTTIN.csv')
 
 # limpieza(df['tweet'])
@@ -83,6 +83,7 @@ corpus = st.CorpusWithoutCategoriesFromParsedDocuments(
 
 # Se asigna el corpus a la libreria de Scattertext
 corpus.get_categories()
+print(st.Dispersion(corpus))
 dispersion = st.Dispersion(corpus)
 dispersion_df = dispersion.get_df()
 
@@ -97,10 +98,11 @@ dispersion_df = dispersion.get_df()
 #dispersion_df['Frequency'].index[dispersion_df['Frequency']==73].tolist()
 #print(dispersion_df.drop(dispersion_df['Frequency'].nlargest(50).index,axis=0))
 
-frecuentes = dispersion_df['Frequency'].nlargest(30).index
+frecuentes = dispersion_df['Frequency'].nlargest(50).index
 #print(frecuentes)
 
-df = pd.read_csv('C:\\Users\\Tello\\Desktop\\programas\\programas_datos\\Datos\\tweets\\UkraineRussia.csv')
+df = pd.read_csv('C:\\Users\\Oscar Tello\\Desktop\\programas_datos\\Datos\\tweets\\WWIII2.csv')
+#df = pd.read_csv('C:\\Users\\Tello\\Desktop\\programas\\programas_datos\\Datos\\tweets\\UkraineRussia.csv')
 df.tweet = df.tweet.apply(lambda x: limpieza(x.lower()))
 nube_palabras1 = df.tweet.apply(lambda x: nube_frecuentes(x.lower()))
 nube_palabras2 = df.tweet.apply(lambda x: nube_infrecuentes(x.lower()))
@@ -128,27 +130,37 @@ df = df.assign(
 
 corpus = st.CorpusWithoutCategoriesFromParsedDocuments(
     df, parsed_col='parse'
-).build().get_unigram_corpus().remove_infrequent_words(minimum_term_count=100)
+).build().get_unigram_corpus().remove_infrequent_words(minimum_term_count=10)
 
-corpus.get_categories()
+print(corpus.get_df())
+#corpus.get_categories()
+#corpus.get_df().to_csv('corpus_get_df.csv')
 dispersion = st.Dispersion(corpus)
+#print(dispersion.drop(['nt'],axis=0))
 dispersion_df = dispersion.get_df()
+#dispersion_df = dispersion.get_df().drop(['nt'],axis=0)
 
 #dispersion_df = dispersion_df.drop(['nt'],axis=0)
-print(dispersion_df['Frequency'].nlargest(50))
-print(dispersion_df['Frequency'].nlargest(50).index)
+
 
 #corpus.get_df().to_csv('analisis_nt.csv')
 
+dispersion_df = dispersion_df.drop(['nt'],axis=0)
+
+print(dispersion_df['Frequency'].nlargest(50))
+print(dispersion_df['Frequency'].nlargest(50).index)
 # Se asigna a los lados X y Y la etiqueta correspondientes y los valores
 dispersion_df = dispersion_df.assign(
-    X=lambda df: df.Frequency,
-    Y=lambda df: df["Rosengren's S"],
+    X=lambda data: data.Frequency,
+    Y=lambda data: data["Rosengren's S"],
+    #data['Frequency'].drop(['nt'],axis=0)
 )
 dispersion_df = dispersion_df.assign(
-    Xpos=lambda df: st.Scalers.log_scale(df.X),
-    Ypos=lambda df: st.Scalers.scale(df.Y),
+    Xpos=lambda data: st.Scalers.log_scale(data.X),
+    Ypos=lambda data: st.Scalers.scale(data.Y),
 )
+
+dispersion_df.to_csv('analisis_nt2.csv')
 
 # Creacion de un archivo HTML que mostrara informacion mediante graficas
 html = st.dataframe_scattertext(
@@ -163,4 +175,4 @@ html = st.dataframe_scattertext(
 )
 
 # Accion que guardar en un archivo html con el nombre especificado
-open("Dispersion_UkraineRussia.html", 'wb').write(html.encode('utf-8'))
+open("Limpieza_WWIII.html", 'wb').write(html.encode('utf-8'))
