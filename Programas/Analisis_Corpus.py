@@ -18,6 +18,7 @@ def limpieza(csv):
         csv = csv.replace(simbolo, '')
         csv = normalize(csv)
     #print(csv.split())
+    csv = ' '.join(word for word in csv.split() if word not in palabras_negativas)
     csv = ' '.join(word for word in csv.split() if word not in stop_words)
     # for word in stop_words:
     #   word = ' ' + word + ' '
@@ -50,6 +51,10 @@ def normalize(s):
 
 
 stop_words = set(stopwords.words('english'))  # Variable con el diccionario en español
+palabras_negativas = {'wasnt', 'mightnt', 'couldnt', 'shant', 'mustnt', 'werent', 'wouldnt', 'arent', 'neednt', 'dont', 'doesnt',
+            'isnt', 'wont', 'didnt', 'hadnt', 'havent', 'hasnt', 'shouldnt', 'thatll', 'its','im', 'yours', 'shes',
+                      'youve'}
+
 diccionarioSimb = {'!', '$', '=', '&', '(', ')', '*', '-', '.', '“', '”', '?', '¿', '¡', '|', '°', '¬', ':', '{', '}',
                    '[', ']', '¨', '<', '>', '~', '^', '♀', '♂', '!', '#', '@', '/', '’', ',','\"'}
 
@@ -61,8 +66,8 @@ nlp = spacy.load('en_core_web_sm')
 # Variable en la que se guardaran los datos del archivo csv de la ruta especificada
 
 #df = pd.read_csv('C:\\Users\\Tello\\Desktop\\programas\\programas_datos\\Datos\\tweets\\UkraineRussia.csv')
-df = pd.read_csv('C:\\Users\\Oscar Tello\\Desktop\\programas_datos\\Datos\\tweets\\WWIII2.csv')
-#df = pd.read_csv('C:\\Users\\LARSI-EQUIPO2\\Desktop\\programas\\Datos\\tweets\\STOPPUTTIN.csv')
+#df = pd.read_csv('C:\\Users\\Oscar Tello\\Desktop\\programas_datos\\Datos\\tweets\\WWIII2.csv')
+df = pd.read_csv('C:\\Users\\LARSI-EQUIPO2\\Desktop\\programas\\Datos\\tweets\\dispersion_WWIII2.csv')
 
 # limpieza(df['tweet'])
 
@@ -83,7 +88,7 @@ corpus = st.CorpusWithoutCategoriesFromParsedDocuments(
 
 # Se asigna el corpus a la libreria de Scattertext
 corpus.get_categories()
-print(st.Dispersion(corpus))
+#print(st.Dispersion(corpus))
 dispersion = st.Dispersion(corpus)
 dispersion_df = dispersion.get_df()
 
@@ -101,7 +106,8 @@ dispersion_df = dispersion.get_df()
 frecuentes = dispersion_df['Frequency'].nlargest(50).index
 #print(frecuentes)
 
-df = pd.read_csv('C:\\Users\\Oscar Tello\\Desktop\\programas_datos\\Datos\\tweets\\WWIII2.csv')
+#df = pd.read_csv('C:\\Users\\Oscar Tello\\Desktop\\programas_datos\\Datos\\tweets\\WWIII2.csv')
+df = pd.read_csv('C:\\Users\\LARSI-EQUIPO2\\Desktop\\programas\\Datos\\tweets\\dispersion_WWIII2.csv')
 #df = pd.read_csv('C:\\Users\\Tello\\Desktop\\programas\\programas_datos\\Datos\\tweets\\UkraineRussia.csv')
 df.tweet = df.tweet.apply(lambda x: limpieza(x.lower()))
 nube_palabras1 = df.tweet.apply(lambda x: nube_frecuentes(x.lower()))
@@ -145,7 +151,7 @@ dispersion_df = dispersion.get_df()
 
 #corpus.get_df().to_csv('analisis_nt.csv')
 
-dispersion_df = dispersion_df.drop(['nt'],axis=0)
+#dispersion_df = dispersion_df.drop(['nt'],axis=0)
 
 print(dispersion_df['Frequency'].nlargest(50))
 print(dispersion_df['Frequency'].nlargest(50).index)
@@ -160,13 +166,13 @@ dispersion_df = dispersion_df.assign(
     Ypos=lambda data: st.Scalers.scale(data.Y),
 )
 
-dispersion_df.to_csv('analisis_nt2.csv')
+#dispersion_df.to_csv('analisis_nt2.csv')
 
 # Creacion de un archivo HTML que mostrara informacion mediante graficas
 html = st.dataframe_scattertext(
     corpus,
     plot_df=dispersion_df,
-    metadata=corpus.get_df()['parse'],
+    metadata=corpus.get_df()['date']+'( '+corpus.get_df()['time']+' )',
     ignore_categories=True,
     x_label='Log Frequency',
     y_label="Rosengren's S",
@@ -175,4 +181,4 @@ html = st.dataframe_scattertext(
 )
 
 # Accion que guardar en un archivo html con el nombre especificado
-open("Limpieza_WWIII.html", 'wb').write(html.encode('utf-8'))
+open("Demostracion_WWIII.html", 'wb').write(html.encode('utf-8'))
