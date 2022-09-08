@@ -34,7 +34,8 @@ nlp = spacy.load('en_core_web_sm')
 
 stop_words = set(stopwords.words('english'))  # Variable con el diccionario en español
 palabras_negativas = {'wasnt', 'mightnt', 'couldnt', 'shant', 'mustnt', 'werent', 'wouldnt', 'arent', 'neednt', 'dont', 'doesnt',
-            'isnt', 'wont', 'didnt', 'hadnt', 'havent', 'hasnt', 'shouldnt', 'thatll'}
+            'isnt', 'wont', 'didnt', 'hadnt', 'havent', 'hasnt', 'shouldnt', 'thatll', 'youll', 'its','im', 'yours', 'shes', 'hes',
+                      'thats', 'whats', 'youd', 'youve', 'ours', 'yourselves', 'himself', 'herself', 'theirs', 'his', 'was', 'is',}
 
 diccionarioSimb = {'!', '$', '=', '&', '(', ')', '*', '-', '.', '“', '”', '?', '¿', '¡', '|', '°', '¬', ':', '{', '}',
                    '[', ']', '¨', '<', '>', '~', '^', '♀', '♂', '!', '#', '@', '/', ','}
@@ -42,7 +43,8 @@ diccionarioSimb = {'!', '$', '=', '&', '(', ')', '*', '-', '.', '“', '”', '?
 print(stop_words)
 #df = st.SampleCorpora.ConventionData2012.get_data().assign(parse=lambda df: df.text.apply(nlp))
 #df = st.SampleCorpora.ConventionData2012.get_data()
-df = pd.read_csv('C:\\Users\\LARSI-EQUIPO2\\Desktop\\programas\\Datos\\tweets\\dispersion_WWIII2.csv')
+#df = pd.read_csv('C:\\Users\\LARSI-EQUIPO2\\Desktop\\programas\\Datos\\tweets\\dispersion_WWIII2.csv')
+df = pd.read_csv('C:\\Users\\Oscar Tello\\Desktop\\programas_datos\\Datos\\tweets\\dispersion_WWIII2.csv')
 #df.to_json('convention_data_2012.json')
 
 df.tweet = df.tweet.apply(lambda x: limpieza(x.lower()))
@@ -78,4 +80,4 @@ html = st.dataframe_scattertext(
     y_axis_labels=['Less Dispersion', 'Medium', 'More Dispersion'],
 )
 
-open("Customizing-Visualization_Frequency_3.html", 'wb').write(html.encode('utf-8'))
+open("Customizing-Visualization_Frequency_4.html", 'wb').write(html.encode('utf-8'))

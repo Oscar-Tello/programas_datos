@@ -20,6 +20,7 @@ def limpieza(csv):
     #print(csv.split())
     csv = ' '.join(word for word in csv.split() if word not in palabras_negativas)
     csv = ' '.join(word for word in csv.split() if word not in stop_words)
+    #print(csv)
     # for word in stop_words:
     #   word = ' ' + word + ' '
     #  csv = csv.replace(word, ' ')
@@ -51,9 +52,11 @@ def normalize(s):
 
 
 stop_words = set(stopwords.words('english'))  # Variable con el diccionario en español
+print(stop_words)
+
 palabras_negativas = {'wasnt', 'mightnt', 'couldnt', 'shant', 'mustnt', 'werent', 'wouldnt', 'arent', 'neednt', 'dont', 'doesnt',
-            'isnt', 'wont', 'didnt', 'hadnt', 'havent', 'hasnt', 'shouldnt', 'thatll', 'its','im', 'yours', 'shes',
-                      'youve'}
+            'isnt', 'wont', 'didnt', 'hadnt', 'havent', 'hasnt', 'shouldnt', 'thatll', 'youll', 'its','im', 'yours', 'shes', 'hes',
+                      'thats', 'whats', 'youd', 'youve', 'ours', 'yourselves', 'himself', 'herself', 'theirs', 'his', 'was', 'is',}
 
 diccionarioSimb = {'!', '$', '=', '&', '(', ')', '*', '-', '.', '“', '”', '?', '¿', '¡', '|', '°', '¬', ':', '{', '}',
                    '[', ']', '¨', '<', '>', '~', '^', '♀', '♂', '!', '#', '@', '/', '’', ',','\"'}
@@ -66,8 +69,8 @@ nlp = spacy.load('en_core_web_sm')
 # Variable en la que se guardaran los datos del archivo csv de la ruta especificada
 
 #df = pd.read_csv('C:\\Users\\Tello\\Desktop\\programas\\programas_datos\\Datos\\tweets\\UkraineRussia.csv')
-#df = pd.read_csv('C:\\Users\\Oscar Tello\\Desktop\\programas_datos\\Datos\\tweets\\WWIII2.csv')
-df = pd.read_csv('C:\\Users\\LARSI-EQUIPO2\\Desktop\\programas\\Datos\\tweets\\dispersion_WWIII2.csv')
+df = pd.read_csv('C:\\Users\\Oscar Tello\\Desktop\\programas_datos\\Datos\\tweets\\dispersion_WWIII2.csv')
+#df = pd.read_csv('C:\\Users\\LARSI-EQUIPO2\\Desktop\\programas\\Datos\\tweets\\dispersion_WWIII2.csv')
 
 # limpieza(df['tweet'])
 
@@ -106,8 +109,8 @@ dispersion_df = dispersion.get_df()
 frecuentes = dispersion_df['Frequency'].nlargest(50).index
 #print(frecuentes)
 
-#df = pd.read_csv('C:\\Users\\Oscar Tello\\Desktop\\programas_datos\\Datos\\tweets\\WWIII2.csv')
-df = pd.read_csv('C:\\Users\\LARSI-EQUIPO2\\Desktop\\programas\\Datos\\tweets\\dispersion_WWIII2.csv')
+df = pd.read_csv('C:\\Users\\Oscar Tello\\Desktop\\programas_datos\\Datos\\tweets\\dispersion_WWIII2.csv')
+#df = pd.read_csv('C:\\Users\\LARSI-EQUIPO2\\Desktop\\programas\\Datos\\tweets\\dispersion_WWIII2.csv')
 #df = pd.read_csv('C:\\Users\\Tello\\Desktop\\programas\\programas_datos\\Datos\\tweets\\UkraineRussia.csv')
 df.tweet = df.tweet.apply(lambda x: limpieza(x.lower()))
 nube_palabras1 = df.tweet.apply(lambda x: nube_frecuentes(x.lower()))
@@ -138,7 +141,7 @@ corpus = st.CorpusWithoutCategoriesFromParsedDocuments(
     df, parsed_col='parse'
 ).build().get_unigram_corpus().remove_infrequent_words(minimum_term_count=10)
 
-print(corpus.get_df())
+#print(corpus.get_df())
 #corpus.get_categories()
 #corpus.get_df().to_csv('corpus_get_df.csv')
 dispersion = st.Dispersion(corpus)
